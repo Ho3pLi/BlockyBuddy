@@ -28,9 +28,13 @@ public class PlayerInfo {
         if (event.phase == TickEvent.Phase.END){
             if (!currentPosition.equals(previousPosition)){
                 previousPosition = currentPosition;
+                return currentPosition;
+            }else{
+                return null;
             }
+        }else{
+            return null;
         }
-        return currentPosition;
     }
 
     @SubscribeEvent
@@ -46,10 +50,16 @@ public class PlayerInfo {
                 if (block.getType() == HitResult.Type.BLOCK) {
                     blockpos = ((BlockHitResult) block).getBlockPos();
                     blockstate = minecraft.level.getBlockState(blockpos);
+                    return String.valueOf((Object) ForgeRegistries.BLOCKS.getKey(blockstate.getBlock()));
+                }else{
+                    return null;
                 }
+            }else{
+                return null;
             }
+        }else{
+            return null;
         }
-        return String.valueOf((Object) ForgeRegistries.BLOCKS.getKey(blockstate.getBlock()));
     }
 
     @SubscribeEvent
@@ -65,20 +75,44 @@ public class PlayerInfo {
                 if (liquid.getType() == HitResult.Type.BLOCK) {
                     blockpos = ((BlockHitResult) liquid).getBlockPos();
                     fluidstate = minecraft.level.getFluidState(blockpos);
+                    return String.valueOf((Object) ForgeRegistries.FLUIDS.getKey(fluidstate.getType()));
+                }else{
+                    return null;
                 }
+            }else{
+                return null;
             }
+        }else{
+            return null;
         }
-        return String.valueOf((Object) ForgeRegistries.FLUIDS.getKey(fluidstate.getType()));
     }
 
     @SubscribeEvent
-    public static float getHealth(TickEvent.PlayerTickEvent event){
+    public static String getTargetedEntity(TickEvent.PlayerTickEvent event){
+        Entity entity = minecraft.crosshairPickEntity;
+
+        if(event.phase == TickEvent.Phase.END){
+            if(entity != null){
+                return String.valueOf((Object) ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+    }
+
+    @SubscribeEvent
+    public static Float getHealth(TickEvent.PlayerTickEvent event){
         Player player = event.player;
-        float health = 0;
+        float health = 0.0F;
 
         if(event.phase == TickEvent.Phase.END) {
             health = player.getHealth();
+            return health;
+        }else{
+            return null;
         }
-        return health;
+
     }
 }
